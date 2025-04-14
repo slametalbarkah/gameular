@@ -9,9 +9,17 @@
             overflow: hidden;
             background-color: #333;
             display: flex;
+            flex-direction: column; /* Mengatur elemen secara vertikal */
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+        }
+
+        #instructions {
+            color: white;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
         #game-board {
@@ -41,6 +49,11 @@
     </style>
 </head>
 <body>
+    <div id="instructions">
+        Gunakan tombol panah untuk menggerakkan ular.<br>
+        Makan makanan merah untuk menambah panjang ular dan skor.<br>
+        Hindari menabrak dinding dan tubuh ular sendiri!
+    </div>
     <div id="score">Skor: 0</div>
     <div id="game-board"></div>
 
@@ -53,7 +66,7 @@
         let snake = [{ x: 10, y: 10 }];
         let food = getRandomFoodPosition();
         let direction = { x: 1, y: 0 }; // Awalnya bergerak ke kanan
-        let speed = 150; // Kecepatan dalam milisekon (semakin kecil semakin cepat)
+        let speed = 150; // Kecepatan dalam milisekon
         let gameInterval;
         let score = 0;
 
@@ -95,7 +108,7 @@
                 score++;
                 scoreDisplay.textContent = `Skor: ${score}`;
                 food = getRandomFoodPosition();
-                speed *= 0.95; // Sedikit percepat setiap makan
+                speed *= 0.95;
                 clearInterval(gameInterval);
                 gameInterval = setInterval(update, speed);
             } else {
