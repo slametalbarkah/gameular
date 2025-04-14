@@ -8,18 +8,23 @@
             margin: 0;
             overflow: hidden;
             background-color: #333;
-            display: flex;
-            flex-direction: column; /* Mengatur elemen secara vertikal */
+            display: flex; /* Menggunakan Flexbox untuk tata letak */
             justify-content: center;
             align-items: center;
             min-height: 100vh;
         }
 
+        #game-container {
+            display: flex; /* Mengatur papan game dan instruksi bersebelahan */
+            align-items: center;
+        }
+
         #instructions {
             color: white;
             font-size: 1.1em;
-            margin-bottom: 20px;
-            text-align: center;
+            padding: 20px;
+            text-align: left;
+            max-width: 300px; /* Lebar maksimum artikel */
         }
 
         #game-board {
@@ -27,6 +32,7 @@
             background-color: #222;
             border: 5px solid #444;
             display: grid;
+            margin-right: 20px; /* Jarak antara papan game dan artikel */
         }
 
         .snake-segment {
@@ -49,13 +55,24 @@
     </style>
 </head>
 <body>
-    <div id="instructions">
-        Gunakan tombol panah untuk menggerakkan ular.<br>
-        Makan makanan merah untuk menambah panjang ular dan skor.<br>
-        Hindari menabrak dinding dan tubuh ular sendiri!
+    <div id="game-container">
+        <div id="game-board">
+            <div id="score">Skor: 0</div>
+        </div>
+        <div id="instructions">
+            <h2>Cara Bermain Game Ular</h2>
+            <ol>
+                <li>Gunakan tombol panah (&#8593;, &#8595;, &#8592;, &#8594;) pada keyboard Anda untuk menggerakkan ular.</li>
+                <li>Tujuan Anda adalah memakan makanan berwarna merah (&#128308;).</li>
+                <li>Setiap kali ular memakan makanan, panjangnya akan bertambah dan skor Anda akan meningkat.</li>
+                <li>Hindari menabrak dinding pembatas area permainan.</li>
+                <li>Jangan biarkan kepala ular menabrak bagian tubuhnya sendiri.</li>
+                <li>Game akan berakhir jika ular menabrak dinding atau tubuhnya sendiri.</li>
+                <li>Semakin banyak makanan yang Anda makan, semakin cepat pula gerakan ular.</li>
+                <li>Selamat bermain!</li>
+            </ol>
+        </div>
     </div>
-    <div id="score">Skor: 0</div>
-    <div id="game-board"></div>
 
     <script>
         const BOARD_SIZE = 20;
@@ -77,6 +94,11 @@
             gameBoard.innerHTML = '';
             drawSnake();
             drawFood();
+            // Skor dipindahkan ke dalam game-board agar posisinya absolut terhadap papan
+            const scoreElement = document.createElement('div');
+            scoreElement.id = 'score';
+            scoreElement.textContent = `Skor: ${score}`;
+            gameBoard.appendChild(scoreElement);
         }
 
         function drawSnake() {
@@ -106,7 +128,6 @@
 
             if (head.x === food.x && head.y === food.y) {
                 score++;
-                scoreDisplay.textContent = `Skor: ${score}`;
                 food = getRandomFoodPosition();
                 speed *= 0.95;
                 clearInterval(gameInterval);
@@ -116,6 +137,7 @@
             }
 
             checkGameOver();
+            draw(); // Panggil draw di setiap update agar skor terbarui
         }
 
         function getRandomFoodPosition() {
@@ -143,8 +165,8 @@
                 direction = { x: 1, y: 0 };
                 speed = 150;
                 score = 0;
-                scoreDisplay.textContent = `Skor: ${score}`;
                 gameInterval = setInterval(update, speed);
+                draw(); // Gambar ulang setelah game over
             }
         }
 
